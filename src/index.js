@@ -1,4 +1,4 @@
-import Cryptor from "cryptorjs";
+import CryptoJS from "crypto-js";
 import imagemin from "imagemin";
 import imageminWebp from "imagemin-webp";
 import password from "./password.js";
@@ -24,23 +24,23 @@ const targetDirPath = path.resolve(`docs/${assertDir}/`);
   });
 })();
 
-console.log('public converted.');
+console.log("public converted.");
 
 // backup assert
 fs.readdirSync(assertSourcePath).forEach(function (filename) {
   const filePath = path.join(assertSourcePath, filename);
   const backupPath = path.join(assertBackupPath, `${filename}.json`);
   const filePathStat = fs.statSync(filePath);
-  if (filePathStat.isFile() && !filename.startsWith('.')) {
+  if (filePathStat.isFile() && !filename.startsWith(".")) {
     const binary = fs.readFileSync(filePath, "binary");
     const buffer = Buffer.from(binary, "binary");
     const base64 = buffer.toString("base64");
-    const encodedBase64 = new Cryptor(password).encode(base64);
+    const encodedBase64 = CryptoJS.AES.encrypt(base64, password).toString();
     fs.writeFileSync(backupPath, JSON.stringify(encodedBase64), "utf-8");
   }
 });
 
-console.log('assert backuped.');
+console.log("assert backuped.");
 
 // convert assert
 (async () => {
@@ -50,7 +50,7 @@ console.log('assert backuped.');
   });
 })();
 
-console.log('assert converted.');
+console.log("assert converted.");
 
 // encode assert
 const tmpPath = path.resolve(`src/${assertDir}-tmp`);
@@ -58,17 +58,17 @@ fs.readdirSync(tmpPath).forEach(function (filename) {
   const filePath = path.join(tmpPath, filename);
   const targetPath = path.join(targetDirPath, filename);
   const filePathStat = fs.statSync(filePath);
-  if (filePathStat.isFile() && !filename.startsWith('.')) {
+  if (filePathStat.isFile() && !filename.startsWith(".")) {
     const binary = fs.readFileSync(filePath, "binary");
     const buffer = Buffer.from(binary, "binary");
     const base64 = buffer.toString("base64");
-    const encodedBase64 = new Cryptor(password).encode(base64);
+    const encodedBase64 = CryptoJS.AES.encrypt(base64, password).toString();
     const encodedBuffer = Buffer.from(encodedBase64, "base64");
     fs.writeFileSync(targetPath, encodedBuffer, "binary");
   }
 });
 
-console.log('assert encoded.');
+console.log("assert encoded.");
 
 // decode and revert assert
 fs.readdirSync(assertBackupPath).forEach(function (filename) {
@@ -78,10 +78,11 @@ fs.readdirSync(assertBackupPath).forEach(function (filename) {
   const targetPathExists = fs.existsSync(targetPath);
   if (filePathStat.isFile() && !targetPathExists && /.json$/.test(filename)) {
     const encodedBase64 = JSON.parse(fs.readFileSync(filePath, "utf-8"));
-    const base64 = new Cryptor(password).decode(encodedBase64);
+    const bytes = CryptoJS.AES.decrypt(encodedBase64, password);
+    const base64 = bytes.toString(CryptoJS.enc.Utf8);
     const buffer = Buffer.from(base64, "base64");
     fs.writeFileSync(targetPath, buffer, "binary");
   }
 });
 
-console.log('assert reverted.');
+console.log("assert reverted.");

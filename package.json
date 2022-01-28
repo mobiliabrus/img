@@ -5,7 +5,7 @@
     "start": "node src"
   },
   "devDependencies": {
-    "cryptorjs": "^3.0.0",
+    "crypto-js": "^4.1.1",
     "imagemin": "^8.0.1",
     "imagemin-webp": "^7.0.0"
   }

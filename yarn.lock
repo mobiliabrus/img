@@ -242,12 +242,10 @@ cross-spawn@^6.0.0:
     shebang-command "^1.2.0"
     which "^1.2.9"
 
-cryptorjs@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.npmjs.org/cryptorjs/-/cryptorjs-3.0.0.tgz#a5f853f6b521a0ecab4cbdf6dbe820c670ff10e3"
-  integrity sha512-KxxwJ4tnUIFzO3OHRh8dAanLKVn580UY0NQ6KV8VqeALO90dTpQzsSYwG0zuPTWvVW7Gn0stxBB71viSWHQEkg==
-  dependencies:
-    depreca "^1.1.1"
+crypto-js@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.npmjs.org/crypto-js/-/crypto-js-4.1.1.tgz#9e485bcf03521041bd85844786b83fb7619736cf"
+  integrity sha512-o2JlM7ydqd3Qk9CA0L4NL6mTzU2sdx96a+oOfPu8Mkl/PK51vSyoi8/rQ8NknZtk44vq15lmhAj9CIAGwgeWKw==
 
 cwebp-bin@^7.0.1:
   version "7.0.1"
@@ -321,11 +319,6 @@ decompress@^4.0.0, decompress@^4.2.0:
     make-dir "^1.0.0"
     pify "^2.3.0"
     strip-dirs "^2.0.0"
-
-depreca@^1.1.1:
-  version "1.3.0"
-  resolved "https://registry.npmjs.org/depreca/-/depreca-1.3.0.tgz#fcb4a9c0c4f55493b4652e0068500c1625209592"
-  integrity sha512-EDWhU36Z6bsF2PegkmbY/n3gd6mfTxiIFk5+j6XOFOk/N8FmgJQYxq26jCCgzlbaJegIs3Xr8taQ5R1ABT/gRA==
 
 dir-glob@^3.0.1:
   version "3.0.1"
