@@ -27,3 +27,4 @@ package-lock.json
 # Important
 src/assert/*
 src/password.js
+src/assert-tmp/*
