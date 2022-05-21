@@ -10,26 +10,29 @@ if (typeof password !== "string") {
   process.exit(1);
 }
 
-const assertDir = "assert";
+const privacyDir = "privacy";
 const publicDir = "public";
-const assertSourcePath = path.resolve(`src/${assertDir}/`);
-const assertBackupPath = path.resolve(`src/${assertDir}-bak/`);
-const targetDirPath = path.resolve(`docs/${assertDir}/`);
+const privacySourcePath = path.resolve(`src/${privacyDir}/`);
+const privacyBackupPath = path.resolve(`src/${privacyDir}-bak/`);
+const targetDirPath = path.resolve(`docs/${privacyDir}/`);
+
+console.log("starting...");
 
 // convert public
 (async () => {
+  console.log("start public...");
   await imagemin([`src/${publicDir}/*.{jpg,jpeg,png}`], {
     destination: `docs/${publicDir}`,
     plugins: [imageminWebp({ metadata: "all" })],
   });
+  console.log("public converted.");
 })();
 
-console.log("public converted.");
-
-// backup assert
-fs.readdirSync(assertSourcePath).forEach(function (filename) {
-  const filePath = path.join(assertSourcePath, filename);
-  const backupPath = path.join(assertBackupPath, `${filename}.json`);
+// backup privacy
+console.log("start backup privacy...");
+fs.readdirSync(privacySourcePath).forEach(function (filename) {
+  const filePath = path.join(privacySourcePath, filename);
+  const backupPath = path.join(privacyBackupPath, `${filename}.json`);
   const filePathStat = fs.statSync(filePath);
   if (filePathStat.isFile() && !filename.startsWith(".")) {
     const binary = fs.readFileSync(filePath, "binary");
@@ -40,20 +43,21 @@ fs.readdirSync(assertSourcePath).forEach(function (filename) {
   }
 });
 
-console.log("assert backuped.");
+console.log("privacy backuped.");
 
-// convert assert
+// convert privacy
 (async () => {
-  await imagemin([`src/${assertDir}/*.{jpg,jpeg,png}`], {
-    destination: `src/${assertDir}-tmp`,
+  console.log("start privacy...");
+  await imagemin([`src/${privacyDir}/*.{jpg,jpeg,png}`], {
+    destination: `src/${privacyDir}-tmp`,
     plugins: [imageminWebp({ metadata: "all" })],
   });
 })();
 
-console.log("assert converted.");
+console.log("privacy converted.");
 
-// encode assert
-const tmpPath = path.resolve(`src/${assertDir}-tmp`);
+// encode privacy
+const tmpPath = path.resolve(`src/${privacyDir}-tmp`);
 fs.readdirSync(tmpPath).forEach(function (filename) {
   const filePath = path.join(tmpPath, filename);
   const targetPath = path.join(targetDirPath, filename);
@@ -68,12 +72,15 @@ fs.readdirSync(tmpPath).forEach(function (filename) {
   }
 });
 
-console.log("assert encoded.");
+console.log("privacy encoded.");
 
-// decode and revert assert
-fs.readdirSync(assertBackupPath).forEach(function (filename) {
-  const filePath = path.join(assertBackupPath, filename);
-  const targetPath = path.join(assertSourcePath, filename.replace(".json", ""));
+// decode and revert privacy
+fs.readdirSync(privacyBackupPath).forEach(function (filename) {
+  const filePath = path.join(privacyBackupPath, filename);
+  const targetPath = path.join(
+    privacySourcePath,
+    filename.replace(".json", "")
+  );
   const filePathStat = fs.statSync(filePath);
   const targetPathExists = fs.existsSync(targetPath);
   if (filePathStat.isFile() && !targetPathExists && /.json$/.test(filename)) {
@@ -85,4 +92,4 @@ fs.readdirSync(assertBackupPath).forEach(function (filename) {
   }
 });
 
-console.log("assert reverted.");
+console.log("privacy reverted.");

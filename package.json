@@ -2,7 +2,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "node src"
+    "build": "node src"
   },
   "devDependencies": {
     "crypto-js": "^4.1.1",

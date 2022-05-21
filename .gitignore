@@ -23,8 +23,9 @@ yarn-error.log*
 *.sw*
 
 package-lock.json
+yarn.lock
 
 # Important
-src/assert/*
+src/privacy/*
 src/password.js
-src/assert-tmp/*
+src/privacy-tmp/*
