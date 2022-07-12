@@ -2,11 +2,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node src"
+    "build": "gulp build",
+    "revert": "gulp revert"
   },
   "devDependencies": {
     "crypto-js": "^4.1.1",
-    "imagemin": "^8.0.1",
-    "imagemin-webp": "^7.0.0"
+    "gulp": "^4.0.2",
+    "gulp-base64-img": "^0.1.1",
+    "gulp-webp": "^4.0.1",
+    "rimraf": "^3.0.2",
+    "through2": "^4.0.2"
   }
 }

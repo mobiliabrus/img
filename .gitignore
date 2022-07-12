@@ -27,5 +27,5 @@ yarn.lock
 
 # Important
 src/privacy/*
-src/password.js
+password.js
 src/privacy-tmp/*
