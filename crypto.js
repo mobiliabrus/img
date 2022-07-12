@@ -6,17 +6,21 @@ const defaultConfig = {
   key: password,
   algorithm: "AES",
   action: "encrypt",
-  options: { mode: CryptoJS.mode.ECB, padding: CryptoJS.pad.Pkcs7 },
+  options: {
+    // mode: CryptoJS.mode.ECB,
+    // padding: CryptoJS.pad.Pkcs7,
+  },
 };
 
 function gulpCryptoJS(config) {
-  const { key, algorithm, action } = { ...defaultConfig, ...config };
+  const { key, algorithm, action, options } = { ...defaultConfig, ...config };
 
   const stream = through.obj(function (file, enc, cb) {
     if (file.isBuffer()) {
       const encryptRaw = CryptoJS[algorithm][action](
         file.contents.toString() + "",
-        key
+        key,
+        // options
       );
       file.contents = new Buffer(
         encryptRaw.toString(action === "decrypt" ? CryptoJS.enc.Utf8 : void 0)
