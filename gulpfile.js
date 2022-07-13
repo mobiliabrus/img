@@ -1,6 +1,8 @@
 import gulp from "gulp";
 import webp from "gulp-webp";
 import base64 from "gulp-base64-img";
+import rename from "gulp-rename";
+import resizer from "gulp-images-resizer";
 import crypto from "./crypto.js";
 import base64tobinary from "./base64tobinary.js";
 import rimraf from "rimraf";
@@ -40,6 +42,17 @@ function toWebp(src, dest) {
   };
 }
 
+function toWebpMin(src, dest) {
+  return function toWebpMin() {
+    return gulp
+      .src(src)
+      .pipe(resizer({ width: 768 }))
+      .pipe(webp({ metadata: "all" }))
+      .pipe(rename({ suffix: ".min" }))
+      .pipe(gulp.dest(dest));
+  };
+}
+
 function toEncrypt(src, dest) {
   return function toEncrypt() {
     return gulp.src(src).pipe(base64()).pipe(crypto()).pipe(gulp.dest(dest));
@@ -60,8 +73,9 @@ const build = gulp.series(
   clean,
   gulp.parallel(
     toWebp(paths.public.src, paths.public.dest),
+    toWebpMin(paths.public.src, paths.public.dest),
     toWebp(paths.animation.src, paths.animation.dest),
-    toEncrypt(paths.privacy.src, paths.privacy.dest)
+    toEncrypt(paths.privacy.src, paths.privacy.dest),
   )
 );
 
