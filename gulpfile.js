@@ -2,6 +2,7 @@ import gulp from "gulp";
 import webp from "gulp-webp";
 import rename from "gulp-rename";
 import resizer from "gulp-images-resizer";
+import gifResizer from "./gifresizer.js";
 import crypto from "./crypto.js";
 import base64 from "./base64.js";
 import base64tobinary from "./base64tobinary.js";
@@ -83,12 +84,24 @@ function toDecrypt(src, dest) {
   };
 }
 
+function toAnimationMin(src, dest) {
+  return function toAnimationMin() {
+    return gulp
+      .src(src)
+      .pipe(gifResizer({ width }))
+      .pipe(webp(webpOption))
+      .pipe(rename(renameOption))
+      .pipe(gulp.dest(dest));
+  };
+}
+
 const build = gulp.series(
   clean,
   gulp.parallel(
     toWebp(paths.public.src, paths.public.dest),
     toWebpMin(paths.public.src, paths.public.dest),
     toWebp(paths.animation.src, paths.animation.dest),
+    toAnimationMin(paths.animation.src, paths.animation.dest),
     toEncrypt(paths.privacy.src, paths.privacy.dest),
     toEncryptMin(paths.privacy.src, paths.privacy.dest)
   )
