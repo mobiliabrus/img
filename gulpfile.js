@@ -7,7 +7,9 @@ import base64 from "./base64.js";
 import base64tobinary from "./base64tobinary.js";
 import rimraf from "rimraf";
 
-const width = 500;
+const width = 768;
+const webpOption = { metadata: "all", quality: 100, preset: "photo" };
+const renameOption = { suffix: ".min" };
 
 const paths = {
   privacy: {
@@ -37,10 +39,7 @@ function clean(done) {
 
 function toWebp(src, dest) {
   return function toWebp() {
-    return gulp
-      .src(src)
-      .pipe(webp({ metadata: "all" }))
-      .pipe(gulp.dest(dest));
+    return gulp.src(src).pipe(webp(webpOption)).pipe(gulp.dest(dest));
   };
 }
 
@@ -49,8 +48,8 @@ function toWebpMin(src, dest) {
     return gulp
       .src(src)
       .pipe(resizer({ width }))
-      .pipe(webp({ metadata: "all" }))
-      .pipe(rename({ suffix: ".min" }))
+      .pipe(webp(webpOption))
+      .pipe(rename(renameOption))
       .pipe(gulp.dest(dest));
   };
 }
@@ -66,10 +65,10 @@ function toEncryptMin(src, dest) {
     return gulp
       .src(src)
       .pipe(resizer({ width }))
-      .pipe(webp({ metadata: "all" }))
+      .pipe(webp(webpOption))
       .pipe(base64())
       .pipe(crypto())
-      .pipe(rename({ suffix: ".min" }))
+      .pipe(rename(renameOption))
       .pipe(gulp.dest(dest));
   };
 }
