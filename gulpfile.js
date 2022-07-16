@@ -1,7 +1,6 @@
 import gulp from "gulp";
 import webp from "gulp-webp";
 import rename from "gulp-rename";
-import resizer from "gulp-images-resizer";
 import gifResizer from "./gifresizer.js";
 import crypto from "./crypto.js";
 import base64 from "./base64.js";
@@ -9,8 +8,9 @@ import base64tobinary from "./base64tobinary.js";
 import rimraf from "rimraf";
 
 const width = 768;
-const webpOption = { metadata: "all", quality: 100, preset: "photo" };
-const renameOption = { suffix: ".min" };
+const webpOptions = { metadata: "all" };
+const resizeOptions = { resize: { width, height: 0 } };
+const renameOptions = { suffix: ".min" };
 
 const paths = {
   privacy: {
@@ -40,37 +40,46 @@ function clean(done) {
 
 function toWebp(src, dest) {
   return function toWebp() {
-    return gulp.src(src).pipe(webp(webpOption)).pipe(gulp.dest(dest));
+    return gulp.src(src).pipe(webp(webpOptions)).pipe(gulp.dest(dest));
   };
 }
 
 function toWebpMin(src, dest) {
   return function toWebpMin() {
-    return gulp
-      .src(src)
-      .pipe(resizer({ width }))
-      .pipe(webp(webpOption))
-      .pipe(rename(renameOption))
-      .pipe(gulp.dest(dest));
+    return (
+      gulp
+        .src(src)
+        // .pipe(resizer({ width }))
+        .pipe(webp({ ...webpOptions, ...resizeOptions }))
+        .pipe(rename(renameOptions))
+        .pipe(gulp.dest(dest))
+    );
   };
 }
 
 function toEncrypt(src, dest) {
   return function toEncrypt() {
-    return gulp.src(src).pipe(base64()).pipe(crypto()).pipe(gulp.dest(dest));
+    return (
+      gulp
+        .src(src)
+        .pipe(base64())
+        .pipe(crypto())
+        .pipe(gulp.dest(dest))
+    );
   };
 }
 
 function toEncryptMin(src, dest) {
   return function toEncryptMin() {
-    return gulp
-      .src(src)
-      .pipe(resizer({ width }))
-      .pipe(webp(webpOption))
-      .pipe(base64())
-      .pipe(crypto())
-      .pipe(rename(renameOption))
-      .pipe(gulp.dest(dest));
+    return (
+      gulp
+        .src(src)
+        .pipe(webp({ ...webpOptions, ...resizeOptions }))
+        .pipe(base64())
+        .pipe(crypto())
+        .pipe(rename(renameOptions))
+        .pipe(gulp.dest(dest))
+    );
   };
 }
 
@@ -86,12 +95,14 @@ function toDecrypt(src, dest) {
 
 function toAnimationMin(src, dest) {
   return function toAnimationMin() {
-    return gulp
-      .src(src)
-      .pipe(gifResizer({ width }))
-      .pipe(webp(webpOption))
-      .pipe(rename(renameOption))
-      .pipe(gulp.dest(dest));
+    return (
+      gulp
+        .src(src)
+        .pipe(gifResizer({ width }))
+        .pipe(webp(webpOptions))
+        .pipe(rename(renameOptions))
+        .pipe(gulp.dest(dest))
+    );
   };
 }
 
