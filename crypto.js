@@ -15,7 +15,7 @@ function gulpCryptoJS(config) {
     if (file.isBuffer()) {
       const keyorigin = key.split("");
       const key16 =
-        key16.length < 16
+        keyorigin.length < 16
           ? [
               ...keyorigin,
               ...Array.from(new Array(keylength - keyorigin.length)).map(
