@@ -1,7 +1,9 @@
 import through from 'through2';
 import CryptoJS from 'crypto-js';
-import password from '../../../../password.js';
+import { getEnv } from 'g-env.js';
 
+const env = getEnv();
+const password = env.LEE6_PASSWORD;
 const keylength = 16;
 const defaultConfig = {
   key: password,
